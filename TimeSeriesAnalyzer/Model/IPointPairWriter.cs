@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace TimeSeriesAnalyzer.Model
 {
-    public interface IDataService
+    public interface IPointPairWriter
     {
-        IEnumerable<Point> GetData();
+        void Write(IEnumerable<Tuple<Point, Point>> pointPairs);
     }
 }

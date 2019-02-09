@@ -1,16 +1,4 @@
-﻿/*
-  In App.xaml:
-  <Application.Resources>
-      <vm:ViewModelLocatorTemplate xmlns:vm="clr-namespace:TimeSeriesAnalyzer.ViewModel"
-                                   x:Key="Locator" />
-  </Application.Resources>
-  
-  In the View:
-  DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
-*/
-
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
+﻿using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using TimeSeriesAnalyzer.Model;
 
@@ -29,16 +17,9 @@ namespace TimeSeriesAnalyzer.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            if (ViewModelBase.IsInDesignModeStatic)
-            {
-                SimpleIoc.Default.Register<IDataService, Design.DesignDataService>();
-            }
-            else
-            {
-                SimpleIoc.Default.Register<IDataService, DataService>();
-            }
-
+            SimpleIoc.Default.Register(() => (IDataService)new RandomDataService(0, 10, 0, 1, 100));
             SimpleIoc.Default.Register<MainViewModel>();
+
         }
 
         /// <summary>
@@ -47,13 +28,7 @@ namespace TimeSeriesAnalyzer.ViewModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
-        public MainViewModel Main
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
-            }
-        }
+        public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
 
         /// <summary>
         /// Cleans up all the resources.
