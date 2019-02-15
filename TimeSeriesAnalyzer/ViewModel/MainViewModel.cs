@@ -1,4 +1,7 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Windows.Documents;
+using GalaSoft.MvvmLight;
 using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
@@ -12,6 +15,10 @@ namespace TimeSeriesAnalyzer.ViewModel
 
         public MainViewModel(IDataService dataService)
         {
+            IEnumerable<int> col = new List<int>();
+            
+
+
             TimeSeries[] timeSeries =
             {
                 new TimeSeries(dataService.GetData()),

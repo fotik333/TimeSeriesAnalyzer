@@ -19,7 +19,7 @@ namespace TimeSeriesAnalyzer.ViewModel
 
             SimpleIoc.Default.Register(() => (IDataService)new RandomDataService(0, 10, 0, 1, 100));
             SimpleIoc.Default.Register<MainViewModel>();
-
+            
         }
 
         /// <summary>

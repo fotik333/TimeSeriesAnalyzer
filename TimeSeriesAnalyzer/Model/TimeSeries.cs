@@ -5,6 +5,33 @@ using System.Windows;
 
 namespace TimeSeriesAnalyzer.Model
 {
+
+    public interface IDataService
+    {
+        IEnumerable<Point> GetPoints();
+    }
+
+    public class RandomDataService : IDataService
+    {
+        public IEnumerable<Point> GetPoints()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public interface ITimeSeriesComparatorService
+    {
+        IEnumerable<Tuple<Point, Point>> Compare(TimeSeries timeSeries1, TimeSeries timeSeries2);
+    }
+
+    public class MoreThanComparatorService : ITimeSeriesComparatorService
+    {
+        public IEnumerable<Tuple<Point, Point>> Compare(TimeSeries timeSeries1, TimeSeries timeSeries2)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class TimeSeries
     {
         public List<Point> Points { get; }
@@ -14,13 +41,10 @@ namespace TimeSeriesAnalyzer.Model
             Points = points.ToList();
         }
 
-        public IEnumerable<Tuple<double, double>> FindGreaterThan(TimeSeries timeSeries)
+        public IEnumerable<Tuple<Point, Point>> Compare(TimeSeries timeSeries, ITimeSeriesComparatorService comparator)
         {
-            var res = new List<Tuple<double, double>>
-            {
-                new Tuple<double, double>(1, 10), new Tuple<double, double>(2, 20), new Tuple<double, double>(3, 30)
-            };
-            return res;
+            return comparator.Compare(this, timeSeries);
         }
     }
+
 }

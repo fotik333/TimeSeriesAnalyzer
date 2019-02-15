@@ -77,9 +77,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Design\DesignDataService.cs" />
-    <Compile Include="Model\FileWriter.cs" />
-    <Compile Include="Model\IDataService.cs" />
-    <Compile Include="Model\IPointPairWriter.cs" />
     <Compile Include="Model\RandomDataService.cs" />
     <Compile Include="Model\TimeSeries.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
