@@ -77,8 +77,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Design\DesignDataService.cs" />
+    <Compile Include="Model\IDataService.cs" />
+    <Compile Include="Model\ITimeSeriesComparatorService.cs" />
+    <Compile Include="Model\MoreThanComparatorService.cs" />
     <Compile Include="Model\RandomDataService.cs" />
     <Compile Include="Model\TimeSeries.cs" />
+    <Compile Include="ViewModel\Converters\PointToStringConverter.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">

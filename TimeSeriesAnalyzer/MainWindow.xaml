@@ -5,27 +5,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:converters="clr-namespace:TimeSeriesAnalyzer.ViewModel.Converters"
         mc:Ignorable="d ignore"
         Height="300"
-        Width="300"
+        Width="620.031"
         Title="MVVM Light Application"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
-    
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Skins/MainSkin.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:PointToStringConverter x:Key="PointToStringConverter" />
         </ResourceDictionary>
+
     </Window.Resources>
 
-    <Grid x:Name="LayoutRoot">
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition ></RowDefinition>
+        </Grid.RowDefinitions>
 
-        <wpf:CartesianChart 
-            DisableAnimations="True"
-            Series="{Binding Series}" 
-            DataTooltip="{x:Null}"
-            Zoom="Xy"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Количество временных рядов:"></TextBlock>
+            <TextBox Text="{Binding TimeSeriesCount, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Width="100"></TextBox>
+            <Button Content="Сгенерировать" Command="{Binding GenerateTimeSeriesCommand}"></Button>
+            <ComboBox ItemsSource="{Binding TimeSeriesIndexes}" SelectedItem="{Binding FirstTimeSeriesIndex}"></ComboBox>
+            <ComboBox ItemsSource="{Binding TimeSeriesIndexes}" SelectedItem="{Binding SecondTimeSeriesIndex}"></ComboBox>
+            <Button Content="Сравнить" Command="{Binding CompareTimeSeriesCommand}"></Button>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition ></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <wpf:CartesianChart  LegendLocation="Top"
+                                DisableAnimations="True"
+                                Series="{Binding Series}" 
+                                DataTooltip="{x:Null}"
+                                Zoom="Xy"/>
+
+            <ListView ItemsSource="{Binding СomparisonResult}" Grid.Column="1" >
+                <ListView.View>
+                    <GridView >
+                        <GridView.Columns>
+
+                            <GridViewColumn Header="Начало" DisplayMemberBinding="{Binding Item1, Converter={StaticResource PointToStringConverter}}"  Width="150" />
+                            <GridViewColumn Header="Конец" DisplayMemberBinding="{Binding Item2, Converter={StaticResource PointToStringConverter}}" Width="150"/>
+
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+        </Grid>
+
 
     </Grid>
 </Window>

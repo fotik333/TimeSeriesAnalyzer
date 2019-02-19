@@ -18,6 +18,7 @@ namespace TimeSeriesAnalyzer.ViewModel
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             SimpleIoc.Default.Register(() => (IDataService)new RandomDataService(0, 10, 0, 1, 100));
+            SimpleIoc.Default.Register<ITimeSeriesComparatorService, MoreThanComparatorService>();
             SimpleIoc.Default.Register<MainViewModel>();
             
         }
