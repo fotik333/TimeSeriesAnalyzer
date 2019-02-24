@@ -2,38 +2,38 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace TimeSeriesAnalyzer.Model
-{
-    public class RandomDataService : IDataService
-    {
-        public double XMin { get; }
-        public double XMax { get; }
-        public double YMin { get; }
-        public double YMax { get; }
-        public int Count { get; }
-
-
+namespace TimeSeriesAnalyzer.Model {
+    public class RandomDataService : IDataService {
         private readonly Random _rand = new Random();
 
-        public RandomDataService(double xMin, double xMax, double yMin, double yMax, int count)
-        {
-            XMin = xMin;
-            XMax = xMax;
-            YMin = yMin;
-            YMax = yMax;
-            Count = count;
-        }
-        public IEnumerable<Point> GetPoints()
-        {
-            //var _rand = new Random();
-            var res = new List<Point>();
-            var yRange = YMax - YMin;
-            for (int i = 0; i < Count; i++)
-            {
-                res.Add(new Point(i, _rand.NextDouble() * yRange + YMin));
+        public IEnumerable<Point> GetPoints(double xMin, double xMax, double yMin, double yMax, int count,
+            bool areIntervalsDifferent) {
+            var result = new List<Point>();
+
+            if (areIntervalsDifferent) {
+                xMin = (xMax - xMin) * _rand.NextDouble() / 2 + xMin;
+                xMax = xMax - (xMax - xMin) * _rand.NextDouble() / 2;
             }
-            //Thread.Sleep(100);
-            return res;
+
+            var yRange = yMax - yMin;
+            var xRange = xMax - xMin;
+            var step = xRange / count;
+            if (areIntervalsDifferent) {
+                for (var i = 0; i < count; i++)
+                    result.Add(new Point(i * step + _rand.NextDouble() * step / 2 + xMin,
+                        _rand.NextDouble() * yRange + yMin));
+            }
+            else {
+                result.Add(new Point(xMin, _rand.NextDouble() * yRange + yMin));
+
+                for (var i = 1; i < count - 1; i++)
+                    result.Add(new Point(i * step + _rand.NextDouble() * step / 2 + xMin,
+                        _rand.NextDouble() * yRange + yMin));
+
+                result.Add(new Point(xMax, _rand.NextDouble() * yRange + yMin));
+            }
+
+            return result;
         }
     }
 }

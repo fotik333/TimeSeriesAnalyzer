@@ -7,63 +7,135 @@
         xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:converters="clr-namespace:TimeSeriesAnalyzer.ViewModel.Converters"
         mc:Ignorable="d ignore"
-        Height="300"
-        Width="620.031"
-        Title="MVVM Light Application"
+        Height="500"
+        Width="1000"
+        Title="Time series analyzer" FontSize="15"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
 
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Skins/MainSkin.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <converters:PointToStringConverter x:Key="PointToStringConverter" />
         </ResourceDictionary>
-
     </Window.Resources>
 
-    <Grid >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition ></RowDefinition>
-        </Grid.RowDefinitions>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*" MaxWidth="270" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="270" />
+        </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Количество временных рядов:"></TextBlock>
-            <TextBox Text="{Binding TimeSeriesCount, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Width="100"></TextBox>
-            <Button Content="Сгенерировать" Command="{Binding GenerateTimeSeriesCommand}"></Button>
-            <ComboBox ItemsSource="{Binding TimeSeriesIndexes}" SelectedItem="{Binding FirstTimeSeriesIndex}"></ComboBox>
-            <ComboBox ItemsSource="{Binding TimeSeriesIndexes}" SelectedItem="{Binding SecondTimeSeriesIndex}"></ComboBox>
-            <Button Content="Сравнить" Command="{Binding CompareTimeSeriesCommand}"></Button>
+        <StackPanel Grid.Column="0" Margin="5" Orientation="Vertical">
+            <Button Content="Generate" FontSize="20" Margin="5" Command="{Binding GenerateTimeSeriesCommand}">
+                <Button.ToolTip>
+                    You can enter the number of series from 2 to 5.
+                    If you enter incorrectly, the last value entered is taken.
+                </Button.ToolTip>
+            </Button>
+            <DockPanel Margin="3" LastChildFill="False">
+                <TextBlock Text="Series count: " />
+                <TextBox DockPanel.Dock="Right"
+                         Text="{Binding TimeSeriesCount, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
+                         Width="50" />
+            </DockPanel>
+            <DockPanel Margin="3" LastChildFill="False">
+                <TextBlock Text="X min:" />
+                <TextBox DockPanel.Dock="Right" Width="50"
+                         Text="{Binding XMin, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" />
+            </DockPanel>
+            <DockPanel Margin="3" LastChildFill="False">
+                <TextBlock Text="X max:" />
+                <TextBox DockPanel.Dock="Right" Width="50"
+                         Text="{Binding XMax, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" />
+            </DockPanel>
+            <DockPanel Margin="3" LastChildFill="False">
+                <TextBlock Text="Y min:" />
+                <TextBox DockPanel.Dock="Right" Width="50"
+                         Text="{Binding YMin, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" />
+            </DockPanel>
+            <DockPanel Margin="3" LastChildFill="False">
+                <TextBlock Text="Y max:" />
+                <TextBox DockPanel.Dock="Right" Width="50"
+                         Text="{Binding YMax, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" />
+            </DockPanel>
+            <DockPanel Margin="3" LastChildFill="False">
+                <TextBlock Text="Points: " />
+                <TextBox DockPanel.Dock="Right" Width="50"
+                         Text="{Binding PointsCount, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" />
+            </DockPanel>
+            <DockPanel Margin="3" LastChildFill="False">
+                <TextBlock Text="Different time intervals: " />
+                <CheckBox DockPanel.Dock="Right" VerticalAlignment="Center"
+                          IsChecked="{Binding AreRangesDifferent}" />
+            </DockPanel>
+            <TextBlock FontSize="10" Opacity="0.5">Use tooltips for more information</TextBlock>
         </StackPanel>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition ></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <wpf:CartesianChart  LegendLocation="Top"
-                                DisableAnimations="True"
-                                Series="{Binding Series}" 
-                                DataTooltip="{x:Null}"
-                                Zoom="Xy"/>
+        <wpf:CartesianChart Grid.Column="1"
+                            LegendLocation="Top" Margin="5"
+                            DisableAnimations="True"
+                            Series="{Binding Series}"
+                            DataTooltip="{x:Null}"
+                            Zoom="Xy">
+            <wpf:CartesianChart.AxisX>
+                <wpf:Axis LabelFormatter="{Binding Formatter}" Sections="{Binding Intervals}" />
+            </wpf:CartesianChart.AxisX>
+            <wpf:CartesianChart.AxisY>
+                <wpf:Axis LabelFormatter="{Binding Formatter}" />
+            </wpf:CartesianChart.AxisY>
+        </wpf:CartesianChart>
 
-            <ListView ItemsSource="{Binding СomparisonResult}" Grid.Column="1" >
-                <ListView.View>
-                    <GridView >
-                        <GridView.Columns>
-
-                            <GridViewColumn Header="Начало" DisplayMemberBinding="{Binding Item1, Converter={StaticResource PointToStringConverter}}"  Width="150" />
-                            <GridViewColumn Header="Конец" DisplayMemberBinding="{Binding Item2, Converter={StaticResource PointToStringConverter}}" Width="150"/>
-
-                        </GridView.Columns>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-
-        </Grid>
-
+        <DockPanel Grid.Column="2" LastChildFill="True">
+            <StackPanel DockPanel.Dock="Bottom" Height="70">
+                <Button Content="Show on the chart" Margin="3" Command="{Binding ShowIntervalsCommand}"
+                        IsEnabled="{Binding AreTimeSeriesCompared}">
+                    <Button.ToolTip>
+                        You need to move charts to update the image
+                    </Button.ToolTip>
+                </Button>
+                <Button Content="Save to file" Margin="3" Command="{Binding SaveIntervalsToFileCommand}"
+                        IsEnabled="{Binding AreTimeSeriesCompared}">
+                    <Button.ToolTip>
+                        The file is saved in the JSON format
+                    </Button.ToolTip>
+                </Button>
+            </StackPanel>
+            <StackPanel>
+                <Button Margin="5" Content="Compare" FontSize="20" Height="30"
+                        Command="{Binding CompareTimeSeriesCommand}">
+                    <Button.ToolTip>
+                        The default values ​​are 0 and 1.
+                    </Button.ToolTip>
+                </Button>
+                <TextBlock Text="Choose series to compare" HorizontalAlignment="Center" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Column="0" Margin="2" ItemsSource="{Binding TimeSeriesIndexes}"
+                              SelectedItem="{Binding FirstTimeSeriesIndex}" />
+                    <ComboBox Grid.Column="1" Margin="2" ItemsSource="{Binding TimeSeriesIndexes}"
+                              SelectedItem="{Binding SecondTimeSeriesIndex}" />
+                </Grid>
+                <Grid>
+                    <ListView ItemsSource="{Binding СomparisonResult}" HorizontalAlignment="Center">
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="First point"
+                                                    DisplayMemberBinding="{Binding Item1, Converter={StaticResource PointToStringConverter}}"
+                                                    Width="130" />
+                                    <GridViewColumn Header="Last point"
+                                                    DisplayMemberBinding="{Binding Item2, Converter={StaticResource PointToStringConverter}}"
+                                                    Width="130" />
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </StackPanel>
+        </DockPanel>
 
     </Grid>
 </Window>

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 
-namespace TimeSeriesAnalyzer.Model
-{
-    public interface IDataService
-    {
-        IEnumerable<Point> GetPoints();
+namespace TimeSeriesAnalyzer.Model {
+    public interface IDataService {
+        IEnumerable<Point> GetPoints(double xMin, double xMax, double yMin, double yMax, int count,
+            bool areIntervalsDifferent);
     }
 }
