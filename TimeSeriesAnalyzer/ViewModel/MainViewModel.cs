@@ -137,6 +137,9 @@ namespace TimeSeriesAnalyzer.ViewModel
                     SectionWidth = interval.Item2.X - interval.Item1.X,
                     Fill = Brushes.Coral
                 });
+
+            // это костыль для отображения интервалов
+            Series.Chart.Updater.Run();
         }
 
         private void SaveIntervalsToFile()

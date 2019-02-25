@@ -6,8 +6,8 @@ using System.Windows;
 namespace TimeSeriesAnalyzer.Model {
     public class TimeSeriesComparatorService : ITimeSeriesComparatorService {
         private const double Eps = 10e-12;
-        private static Tuple<Point, Point> _firstSegment;
-        private static Tuple<Point, Point> _secondSegment;
+        private Tuple<Point, Point> _firstSegment;
+        private Tuple<Point, Point> _secondSegment;
 
         public IEnumerable<Tuple<Point, Point>> Compare(TimeSeries timeSeries1, TimeSeries timeSeries2) {
             var result = new List<Tuple<Point, Point>>();
@@ -70,7 +70,7 @@ namespace TimeSeriesAnalyzer.Model {
             return result;
         }
 
-        private static bool IsFirstGreater(bool isFirstPointRight, TimeSeries ts1, TimeSeries ts2) {
+        private bool IsFirstGreater(bool isFirstPointRight, TimeSeries ts1, TimeSeries ts2) {
             if (isFirstPointRight) {
                 var p = ts1.Points.First();
                 var i = -1;
@@ -121,7 +121,7 @@ namespace TimeSeriesAnalyzer.Model {
             }
         }
 
-        private static int FindIntersectionIters(TimeSeries ts1, TimeSeries ts2, ref int iter1, ref int iter2) {
+        private int FindIntersectionIters(TimeSeries ts1, TimeSeries ts2, ref int iter1, ref int iter2) {
             while (iter1 + 1 < ts1.Points.Count && iter2 + 1 < ts2.Points.Count) {
                 _firstSegment = new Tuple<Point, Point>(ts1.Points[iter1], ts1.Points[iter1 + 1]);
                 _secondSegment = new Tuple<Point, Point>(ts2.Points[iter2], ts2.Points[iter2 + 1]);
@@ -144,7 +144,7 @@ namespace TimeSeriesAnalyzer.Model {
             return -1;
         }
 
-        private static Point FindIntersection() {
+        private Point FindIntersection() {
             var result = new Point();
 
             var dx1 = _firstSegment.Item2.X - _firstSegment.Item1.X;
@@ -163,7 +163,7 @@ namespace TimeSeriesAnalyzer.Model {
             return result;
         }
 
-        private static bool AreCrossed() {
+        private bool AreCrossed() {
             var mul1 = (_secondSegment.Item2.X - _secondSegment.Item1.X) *
                        (_firstSegment.Item1.Y - _secondSegment.Item1.Y) -
                        (_secondSegment.Item2.Y - _secondSegment.Item1.Y) *
